@@ -11,6 +11,7 @@ func startRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
+		i := 0
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 
@@ -21,12 +22,20 @@ func startRepl() {
 			continue
 		}
 
-		fmt.Printf("Your command was: %s\n", cleaned[0])
+		if string(cleaned[i]) == "exit" {
+			fmt.Print(commandExit())
+			os.Exit(0)
+		}
 
+		i++
 	}
 }
 
 func cleanInput(text string) []string {
 	text = strings.ToLower(strings.TrimSpace(text))
 	return strings.Fields(text)
+}
+
+func commandExit() error {
+	return fmt.Errorf("Closing the Pokedex... Goodbye!")
 }
