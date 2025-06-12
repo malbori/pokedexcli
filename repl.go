@@ -31,7 +31,7 @@ func startRepl() {
 			}
 			fmt.Print(command.callback())
 		} else {
-			fmt.Print("Unknown command")
+			fmt.Print("Unknown command\n")
 		}
 
 		i++
