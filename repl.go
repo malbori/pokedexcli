@@ -25,7 +25,11 @@ func startRepl() {
 		command, exists := Commands[string(cleaned[i])]
 
 		if exists {
-			command.callback()
+			err := command.callback()
+			if err != nil {
+				fmt.Print(err)
+			}
+
 			if command.name == "exit" {
 				os.Exit(0)
 			}
