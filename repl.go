@@ -52,7 +52,7 @@ func commandExit() error {
 }
 
 func commandHelp() error {
-	helpMessage := "Usage:\n\nhelp: Displays a help message\nexit: Exit the Pokedex\n"
+	helpMessage := "Welcome to the Pokedex!\nUsage:\n\nhelp: Displays a help message\nexit: Exit the Pokedex\n"
 	fmt.Print(helpMessage)
 	return nil
 }
