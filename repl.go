@@ -25,7 +25,7 @@ func startRepl() {
 		command, exists := Commands[string(cleaned[i])]
 
 		if exists {
-			fmt.Print(command.callback())
+			command.callback()
 			if command.name == "exit" {
 				os.Exit(0)
 			}
@@ -43,9 +43,12 @@ func cleanInput(text string) []string {
 }
 
 func commandExit() error {
-	return fmt.Errorf("Closing the Pokedex... Goodbye!\n")
+	fmt.Print("Closing the Pokedex... Goodbye!\n")
+	return nil
 }
 
 func commandHelp() error {
-	return fmt.Errorf("Helping\n")
+	helpMessage := "Usage:\n\nhelp: Displays a help message\nexit: Exit the Pokedex\n"
+	fmt.Print(helpMessage)
+	return nil
 }
