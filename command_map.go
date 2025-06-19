@@ -1,93 +1,42 @@
 package main
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
 )
 
-func commandMapf(config *Config) error {
+func commandMapf(config *config) error {
 
-	url := config.Next
-
-	if url == "" {
-		url = "https://pokeapi.co/api/v2/location-area/"
-	}
-	res, err := http.Get(url)
-
+	locationsResp, err := config.pokeapiClient.ListLocations(config.nextLocUrl)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	body, err := io.ReadAll(res.Body)
-	defer res.Body.Close()
+	config.nextLocUrl = locationsResp.Next
+	config.prevLocUrl = locationsResp.Previous
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var locations LocationAreaBatch
-	err = json.Unmarshal(body, &locations)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	config.Next = locations.Next
-	if locations.Previous != nil {
-		config.Previous = *locations.Previous
-	} else {
-		config.Previous = ""
-	}
-
-	for i := range len(locations.Results) {
-		fmt.Println(locations.Results[i].Name)
+	for _, location := range locationsResp.Results {
+		fmt.Println(location.Name)
 	}
 
 	return nil
 }
 
-func commandMapb(config *Config) error {
-
-	url := config.Previous
-
-	if url == "" {
-		url = "https://pokeapi.co/api/v2/location-area/"
-	}
-	res, err := http.Get(url)
-
-	if err != nil {
-		return err
-
+func commandMapb(config *config) error {
+	if config.prevLocUrl == nil {
+		return errors.New("you're on the first page")
 	}
 
-	body, err := io.ReadAll(res.Body)
-	defer res.Body.Close()
-
+	locationResp, err := config.pokeapiClient.ListLocations(config.prevLocUrl)
 	if err != nil {
 		return err
 	}
 
-	var locations LocationAreaBatch
-	err = json.Unmarshal(body, &locations)
+	config.nextLocUrl = locationResp.Next
+	config.prevLocUrl = locationResp.Previous
 
-	if err != nil {
-		log.Fatal(err)
+	for _, loc := range locationResp.Results {
+		fmt.Println(loc.Name)
 	}
-
-	config.Next = locations.Next
-	if locations.Previous != nil {
-		config.Previous = *locations.Previous
-	} else {
-		config.Previous = ""
-	}
-
-	for i := range len(locations.Results) {
-		fmt.Println(locations.Results[i].Name)
-	}
-
 	return nil
-
 }
