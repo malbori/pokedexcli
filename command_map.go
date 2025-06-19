@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func commandMap(config *Config) {
+func commandMapf(config *Config) error {
 
 	url := config.Next
 
@@ -45,5 +45,49 @@ func commandMap(config *Config) {
 	for i := range len(locations.Results) {
 		fmt.Println(locations.Results[i].Name)
 	}
+
+	return nil
+}
+
+func commandMapb(config *Config) error {
+
+	url := config.Previous
+
+	if url == "" {
+		url = "https://pokeapi.co/api/v2/location-area/"
+	}
+	res, err := http.Get(url)
+
+	if err != nil {
+		return err
+
+	}
+
+	body, err := io.ReadAll(res.Body)
+	defer res.Body.Close()
+
+	if err != nil {
+		return err
+	}
+
+	var locations LocationAreaBatch
+	err = json.Unmarshal(body, &locations)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config.Next = locations.Next
+	if locations.Previous != nil {
+		config.Previous = *locations.Previous
+	} else {
+		config.Previous = ""
+	}
+
+	for i := range len(locations.Results) {
+		fmt.Println(locations.Results[i].Name)
+	}
+
+	return nil
 
 }
