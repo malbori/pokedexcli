@@ -7,8 +7,9 @@
     "strict": true,
     "moduleResolution": "nodenext",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "src/repl.test.ts", "src/repl.ts"],
   "exclude": ["node_modules"]
 }
