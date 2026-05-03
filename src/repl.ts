@@ -1,6 +1,4 @@
-import { createInterface } from 'node:readline';
-import { stdin, stdout } from "node:process";
-import { getCommands } from './util.ts/commands.js';
+import { State } from './state.js';
 
 export function cleanInput(input: string): string[] {
     let inputs = input.trim().toLocaleLowerCase().split(/\s+/);
@@ -8,12 +6,10 @@ export function cleanInput(input: string): string[] {
     return inputs;
 }
 
-export function startREPL() {
-    const rl = createInterface({
-        input: stdin,
-        output: stdout,
-        prompt: "Pokedex > ",
-    });
+export function startREPL(state: State) {
+
+    const rl = state.readline;
+    const commands = state.cmdRegistry;
 
     rl.prompt();
 
@@ -27,7 +23,6 @@ export function startREPL() {
         }
 
         const comm = input[0];
-        const commands = getCommands();
         const cmd = commands[comm];
 
 
@@ -40,7 +35,7 @@ export function startREPL() {
         }
         try {
 
-            cmd.callback(commands);
+            cmd.callback(state);
 
         } catch (error) {
             console.log(error);
