@@ -6,7 +6,7 @@ export function cleanInput(input: string): string[] {
     return inputs;
 }
 
-export function startREPL(state: State) {
+export async function startREPL(state: State) {
 
     const rl = state.readline;
     const commands = state.cmdRegistry;
@@ -35,10 +35,10 @@ export function startREPL(state: State) {
         }
         try {
 
-            cmd.callback(state);
+            await cmd.callback(state);
 
         } catch (error) {
-            console.log(error);
+            console.log((error as Error).message);
         }
 
         rl.prompt();
