@@ -1,3 +1,4 @@
+import { commandCatch } from "../commands/command_catch.js";
 import { commandExit } from "../commands/command_exit.js";
 import { commandExplore } from "../commands/command_explore.js";
 import { commandHelp } from "../commands/command_help.js";
@@ -31,6 +32,11 @@ export function getCommands(): Record<string, CLICommand> {
             name: "explore",
             description: "Explore a location",
             callback: commandExplore,
+        },
+        catch: {
+            name: "catch",
+            description: "Catch a pokemon",
+            callback: commandCatch,
         },
     };
 }

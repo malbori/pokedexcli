@@ -1,7 +1,7 @@
 import { stdin, stdout } from "node:process";
 import { createInterface, type Interface } from "node:readline";
 import { getCommands } from "./util.ts/commands.js";
-import { PokeAPI } from "./api/pokeapi.js";
+import { PokeAPI, Pokemon } from "./api/pokeapi.js";
 
 export type CLICommand = {
     name: string;
@@ -14,6 +14,7 @@ export type State = {
     cmdRegistry: Record<string, CLICommand>;
 
     pokeAPI: PokeAPI;
+    pokedex: Record<string, Pokemon>;
 
     nextLocationURL: string | null;
     prevLocationURL: string | null;
@@ -35,6 +36,7 @@ export function initState(): State {
         pokeAPI: new PokeAPI(),
         nextLocationURL: null,
         prevLocationURL: null,
+        pokedex: {},
     };
 
 }

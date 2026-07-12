@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import { State } from "../state.js";
 
 export async function commandExplore(state: State, areaName?: string): Promise<void> {
