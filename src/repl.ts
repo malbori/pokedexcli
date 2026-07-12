@@ -15,27 +15,27 @@ export async function startREPL(state: State) {
 
     rl.on("line", async (line) => {
 
-        const input = cleanInput(line);
+        const [commandName, ...args] = cleanInput(line);
 
-        if (input.length === 0) {
+
+        if (commandName.length === 0) {
             rl.prompt();
             return;
         }
 
-        const comm = input[0];
-        const cmd = commands[comm];
+        const cmd = commands[commandName];
 
 
         if (!cmd) {
             console.log(
-                `Unknown command: "${comm}". Type "help" for a list of commands.`,
+                `Unknown command: "${commandName}". Type "help" for a list of commands.`,
             );
             rl.prompt();
             return;
         }
         try {
 
-            await cmd.callback(state);
+            await cmd.callback(state, ...args);
 
         } catch (error) {
             console.log((error as Error).message);
